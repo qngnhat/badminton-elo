@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Player {
+  id             String   @id @default(cuid())
+  name           String
+  elo            Float    @default(1000)
+  matchesPlayed  Int      @default(0)
+  lastPlayedAt   DateTime?
+  status         String   @default("active") // active | inactive
+  isGuest        Boolean  @default(false)
+  note           String?            // phòng ban, ghi chú
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  matchPlayers          MatchPlayer[]
+  tournamentPlayers     TournamentPlayer[]
+}
+
+model Match {
+  id          String   @id @default(cuid())
+  date        DateTime @default(now())
+  type        String   // singles | doubles
+  score1      Int      // team 1 score
+  score2      Int      // team 2 score
+  winner      Int      // 1 or 2
+  isRanked    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  players          MatchPlayer[]
+  tournamentMatch  TournamentMatch?
+}
+
+model MatchPlayer {
+  id        String @id @default(cuid())
+  matchId   String
+  playerId  String
+  team      Int    // 1 or 2
+  oldElo    Float
+  newElo    Float
+
+  match     Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  player    Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([matchId, playerId])
+}
+
+// ─── Tournament ───────────────────────────────────────
+
+model Tournament {
+  id        String   @id @default(cuid())
+  name      String
+  date      DateTime @default(now())
+  format    String   // round_robin | single_elim | group_knockout
+  type      String   // singles | doubles
+  status    String   @default("draft") // draft | in_progress | completed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participants TournamentPlayer[]
+  matches      TournamentMatch[]
+}
+
+model TournamentPlayer {
+  id           String  @id @default(cuid())
+  tournamentId String
+  playerId     String
+  seed         Int?
+  groupName    String? // "A", "B", etc. for group_knockout
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  player     Player     @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([tournamentId, playerId])
+}
+
+model TournamentMatch {
+  id           String  @id @default(cuid())
+  tournamentId String
+  matchId      String? @unique // linked when result is recorded
+  round        Int            // round number (1-based)
+  position     Int            // position within round (1-based)
+  groupName    String?        // for group stage
+  slot1        String?        // playerId (or "BYE")
+  slot2        String?        // playerId (or "BYE")
+  winnerId     String?        // playerId of winner
+  status       String  @default("pending") // pending | ready | completed
+  nextMatchId  String?        // for elimination: winner goes here
+  nextSlot     Int?           // 1 or 2
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  match      Match?     @relation(fields: [matchId], references: [id], onDelete: Cascade)
+}
