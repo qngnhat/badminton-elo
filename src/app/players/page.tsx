@@ -259,22 +259,21 @@ export default function PlayersPage() {
                 <Avatar player={player} />
 
                 <Link href={`/players/${player.id}`} className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-medium text-sm truncate">{player.name}</span>
-                    <span className={`text-[10px] px-1.5 py-0 rounded shrink-0 ${
-                      player.isGuest ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"
-                    }`}>
-                      {player.isGuest ? "Vãng lai" : "Thành viên"}
-                    </span>
-                  </div>
+                  <span className="font-medium text-sm">{player.name}</span>
                   {player.note && (
-                    <p className="text-[11px] text-gray-500 mt-0.5 truncate">{player.note}</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5">{player.note}</p>
                   )}
                   <div className="flex gap-2 mt-0.5">
                     <span className="text-xs text-gray-500 font-mono">{Math.round(player.elo)} Elo</span>
                     <span className="text-xs text-gray-400">{player.matchesPlayed} trận</span>
                   </div>
                 </Link>
+
+                <span className={`text-[10px] px-1.5 py-0.5 rounded shrink-0 ${
+                  player.isGuest ? "bg-orange-100 text-orange-700" : "bg-green-100 text-green-700"
+                }`}>
+                  {player.isGuest ? "Vãng lai" : "TV"}
+                </span>
 
                 <button onClick={() => startEdit(player)}
                   className="text-blue-400 active:text-blue-600 text-xs px-2 py-1 shrink-0">
