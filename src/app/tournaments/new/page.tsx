@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PlayerPicker } from "@/app/components/player-picker";
 
 interface Player {
   id: string;
@@ -208,24 +209,7 @@ export default function NewTournamentPage() {
               {selected.size === players.length ? "Bỏ chọn" : "Chọn tất cả"}
             </button>
           </div>
-          <div className="flex flex-wrap gap-1.5">
-            {players.map((p) => (
-              <button
-                key={p.id}
-                onClick={() => togglePlayer(p.id)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs border transition-colors ${
-                  selected.has(p.id)
-                    ? "bg-blue-50 border-blue-300 text-blue-800"
-                    : "bg-white border-gray-200 text-gray-600 active:bg-gray-100"
-                }`}
-              >
-                {p.name}
-                <span className="ml-1 text-[10px] text-gray-400">
-                  {Math.round(p.elo)}
-                </span>
-              </button>
-            ))}
-          </div>
+          <PlayerPicker players={players} selected={selected} onToggle={togglePlayer} />
         </div>
 
         {/* Doubles: Team pairing */}

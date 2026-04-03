@@ -35,6 +35,7 @@ interface PlayerDetail {
   status: string;
   isGuest: boolean;
   note: string | null;
+  avatarUrl: string | null;
   matchPlayers: MatchDetail[];
 }
 
@@ -77,9 +78,13 @@ export default function PlayerDetailPage() {
 
       <div className="bg-white rounded-lg border border-gray-200 p-4 mb-4">
         <div className="flex items-center gap-3 mb-3">
-          <div className={`w-12 h-12 rounded-full ${avatarColor(player.name)} flex items-center justify-center text-white text-lg font-bold shrink-0`}>
-            {getInitials(player.name)}
-          </div>
+          {player.avatarUrl ? (
+            <img src={player.avatarUrl} alt="" className="w-12 h-12 rounded-full object-cover shrink-0" />
+          ) : (
+            <div className={`w-12 h-12 rounded-full ${avatarColor(player.name)} flex items-center justify-center text-white text-lg font-bold shrink-0`}>
+              {getInitials(player.name)}
+            </div>
+          )}
           <div className="flex-1">
             <h1 className="text-xl font-bold">{player.name}</h1>
             <div className="flex gap-2 mt-0.5">

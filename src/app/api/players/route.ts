@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 // POST /api/players - Create a new player
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { name, elo, isGuest, note } = body;
+  const { name, elo, isGuest, note, avatarUrl } = body;
 
   if (!name?.trim()) {
     return NextResponse.json({ error: "Cần nhập tên" }, { status: 400 });
@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
       elo: elo ?? 1000,
       isGuest: isGuest ?? false,
       note: note?.trim() || null,
+      avatarUrl: avatarUrl || null,
     },
   });
 

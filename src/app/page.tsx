@@ -12,6 +12,7 @@ interface Player {
   status: string;
   isGuest: boolean;
   note: string | null;
+  avatarUrl: string | null;
 }
 
 function getTier(elo: number) {
@@ -109,9 +110,13 @@ export default function Leaderboard() {
                 </span>
 
                 {/* Avatar */}
-                <div className={`w-8 h-8 rounded-full ${avatarColor(player.name)} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
-                  {getInitials(player.name)}
-                </div>
+                {player.avatarUrl ? (
+                  <img src={player.avatarUrl} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
+                ) : (
+                  <div className={`w-8 h-8 rounded-full ${avatarColor(player.name)} flex items-center justify-center text-white text-xs font-bold shrink-0`}>
+                    {getInitials(player.name)}
+                  </div>
+                )}
 
                 {/* Name + note */}
                 <div className="flex-1 min-w-0">

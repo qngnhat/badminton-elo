@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Player {
@@ -17,6 +16,7 @@ model Player {
   status         String   @default("active") // active | inactive
   isGuest        Boolean  @default(false)
   note           String?            // phòng ban, ghi chú
+  avatarUrl      String?            // base64 data URL
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 

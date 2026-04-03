@@ -40,6 +40,7 @@ export async function PATCH(
   if (status !== undefined) data.status = status;
   if (isGuest !== undefined) data.isGuest = isGuest;
   if (note !== undefined) data.note = note?.trim() || null;
+  if (body.avatarUrl !== undefined) data.avatarUrl = body.avatarUrl || null;
 
   const player = await prisma.player.update({
     where: { id },
